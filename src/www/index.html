@@ -16,12 +16,12 @@
         // Exercise: the Greeting component should take props from its owner
         var Greeting = React.createClass({
             render: function() {
-                return <h1>Hi, my name is ___. I like to ___.</h1>;
+                return <h1>Hi, my name is {this.props.name}. I like to {this.props.hobby}.</h1>;
             }
         });
 
         ReactDOM.render(
-            <Greeting />,
+            <Greeting name="Tasneem" hobby="Read"/>,
             document.getElementById('my-react-container')
         );
 
