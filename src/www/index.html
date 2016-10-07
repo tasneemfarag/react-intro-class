@@ -26,32 +26,40 @@
         // 2. Instead of incrementing by +/-1, use the offset to increment and decrement
         // 3. Also, when the user clicks Reset, the count should reset to the initialCount
         var ClickCounter = React.createClass({
-            render: function() {
+
+            getInitialState() {
+                return {
+                    count: this.props.initialCount
+                };
+            },
+
+            render() {
                 return (
                     <div>
                         <h1>Click Counter</h1>
                            <div>
-                               <button onClick={this.increment}>+1</button>
-                               <button onClick={this.decrement}>-1</button>
-                               <button>Reset</button>
+                               <button onClick={this.increment}>+{this.props.offset}</button>
+                               <button onClick={this.decrement}>-{this.props.offset}</button>
+                               <button onClick={this.reset}>Reset</button>
                            </div>
-                        <h2>Clicks: {this.state.clickCount}</h2>
+                        <h2>Clicks: {this.state.count}</h2>
                     </div>
                 );
             },
-            getInitialState: function() {
-                return {
-                    clickCount: 0
-                };
-            },
-            increment: function() {
+            
+            increment() {
                 this.setState({
-                    clickCount: this.state.clickCount + 1
+                    count: this.state.count + this.props.offset
                 });
             },
-            decrement: function() {
+            decrement() {
                 this.setState({
-                    clickCount: this.state.clickCount - 1
+                    count: this.state.count - this.props.offset
+                });
+            },
+            reset() {
+                this.setState({
+                    count: this.props.initialCount
                 });
             }
         });
