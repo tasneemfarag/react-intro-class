@@ -35,25 +35,89 @@ export default React.createClass({
 	 [] 11. Show the message count inside the "count" div.
 	 */
 
+	 getInitialState() {
+	 	return {
+	 		messageList: [],
+	 		newMessage: ''
+	 	};
+	 },
+
 	render() {
 
 		require('./chat.scss');
 
 		return (
 			<div className="chat-container">
-				<div className="messages">
-
+				<div className="messages" ref="messages">
+					{this._renderMessageList()}
 				</div>
 				<div className="message-input">
-					<input type="text"/>
+					<input placeholder="Type here ..." type="text"
+					 value={this.state.newMessage}
+					 onChange={this._onNewMessageChange}
+					 onKeyPress={this._onNewMessageKeyPress}
+					 ref={this._foucsTextInput}/>
 				</div>
 				<div className="message-button">
-					<button>Submit</button>
+					<button onClick={this._onSubmitClick}>Submit</button>
 				</div>
 				<div className="count">
-
+					<span>Message count: {this.state.messageList.length}</span>
 				</div>
 			</div>
 		);
+	},
+
+	_renderMessageList() {
+		if (this.state.messageList.length === 0) {
+			return <span>No messages</span>;
+		}
+		else {
+			return this.state.messageList.map((message) => {
+				return <div className="message" key={message.id}>{message.text}</div>;
+			});
+		}
+	},
+
+	_onNewMessageChange(event) {
+		this.setState({
+			newMessage: event.target.value
+		});
+	},
+
+	_onSubmitClick() {
+
+		this._addNewMessageIfNotEmpty();
+	}, 
+
+	_addNewMessageIfNotEmpty() {
+
+		if (this.state.newMessage.length > 0) {
+			let message = {
+			id: this.state.messageList.length,
+			text: this.state.newMessage
+		};
+
+		this.state.messageList.push(message);
+
+		this.setState({
+			messageList: this.state.messageList,
+			newMessage: ''
+			});
+		}
+	},
+
+	_onNewMessageKeyPress(event) {
+		if (event.key === 'Enter') {
+			this._addNewMessageIfNotEmpty();
+		}
+	},
+
+	_foucsTextInput(domElement) {
+		domElement.focus();
+	},
+
+	componentDidUpdate() {
+		this.refs.messages.scrollTop = this.refs.messages.scrollHeight;
 	}
 });
